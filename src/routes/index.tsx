@@ -117,7 +117,7 @@ function Index() {
         scene.style.setProperty("--accent-drift", `${(1 - entrance) * (isHulk ? 22 : isLoki ? -18 : 14)}px`);
         scene.style.setProperty("--accent-turn", `${(isLoki ? -12 : 11) * entrance}deg`);
         for (const key of ["label", "role", "title", "line", "description", "indicator"] as const) {
-          scene.style.setProperty(`--${key}-y`, `${(1 - variables[`--${key}-progress`]) * (key === "title" ? 29 : 18)}px`);
+          scene.style.setProperty(`--${key}-y`, `${(1 - (variables[`--${key}-progress`] ?? 0)) * (key === "title" ? 29 : 18)}px`);
         }
         scene.classList.add("scene-ready");
       }
