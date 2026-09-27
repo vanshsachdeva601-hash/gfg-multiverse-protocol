@@ -147,7 +147,7 @@ function Index() {
     const onMove = (e: PointerEvent) => {
       for (const el of targets) {
         const bounds = el.getBoundingClientRect();
-        const power = Number(el.dataset.magnet) || 1;
+        const power = Number(el.dataset["magnet"]) || 1;
         const px = Math.max(bounds.left, Math.min(e.clientX, bounds.right));
         const py = Math.max(bounds.top, Math.min(e.clientY, bounds.bottom));
         const distance = Math.hypot(e.clientX - px, e.clientY - py);
