@@ -7,6 +7,7 @@ import portal from "@/assets/portal.jpg";
 import doom from "@/assets/armored-hero.jpg";
 import hulk from "@/assets/titan-hero.jpg";
 import loki from "@/assets/loki.jpg";
+import gfgLogo from "@/assets/GeeksForGeeks_logo.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({ meta: [
@@ -149,7 +150,7 @@ function Index() {
     <div className="scroll-progress" style={{ width: `${progress}%` }} aria-hidden="true" />
     <header className={`site-header ${scrolled || menuOpen ? "scrolled" : ""}`}>
       <a className="brand" href="#top" aria-label="GeeksForGeeks Bennett University, back to top">
-        <span className="brand-mark" aria-hidden="true"><span /><span /></span>
+        <img className="brand-mark" src={gfgLogo.url} alt="" width={34} height={27} />
         <span className="brand-type"><strong>GEEKSFORGEEKS</strong><small>BENNETT UNIVERSITY</small></span>
       </a>
       <nav className="desktop-nav" aria-label="Main navigation">{nav.map(item => <a key={item.label} className={active === item.label ? "active" : ""} href={item.href}>{item.label}</a>)}</nav>
@@ -190,7 +191,7 @@ function Index() {
     <section id="register" className="final-cta"><div className="final-background"><img src={portal} alt="" loading="lazy" width={1536} height={1024} /></div><div className="final-inner section-container reveal"><SectionLabel number="07" text="THE FINAL CALL" /><h2>YOUR MISSION<br /><em>STARTS NOW.</em></h2><p>Step into the Multiverse Protocol.</p><Button className="primary-cta final-button" onClick={register}>REGISTER NOW <ArrowUpRight size={20} /></Button><span className="final-caption">THE NEXT CHAPTER BEGINS WITH YOU.</span></div></section>
 
     <section className="details"><div className="section-container details-grid"><div><span>DATE</span><strong>{event.date}</strong></div><div><span>TIME</span><strong>{event.time}</strong></div><div><span>VENUE</span><strong>{event.venue}</strong></div><div><span>HOSTED BY</span><strong>{event.host}</strong></div></div><p className="details-note">Event date, time, venue and schedule shown are sample placeholder details.</p></section>
-    <footer className="footer"><div className="section-container"><div className="footer-top"><div><span className="footer-brand">GEEKSFORGEEKS <b>×</b> BENNETT UNIVERSITY</span><strong>THE MULTIVERSE<br />PROTOCOL<span>.</span></strong></div><div className="footer-links">{Object.entries(event.social).map(([label, url]) => url ? <a key={label} href={url} target="_blank" rel="noopener noreferrer">{label}<ArrowUpRight size={15} /></a> : <Button key={label} variant="ghost" onClick={() => setNotice(true)}>{label}<ArrowUpRight size={15} /></Button>)}</div></div><div className="footer-bottom"><span>© 2026 GeeksForGeeks Student Chapter</span><span>BUILT FOR THE NEXT UNIVERSE</span><a href="#top">BACK TO TOP ↑</a></div></div></footer>
+    <footer className="footer"><div className="section-container"><div className="footer-top"><div><span className="footer-brand"><img src={gfgLogo.url} alt="" width={23} height={12} />GEEKSFORGEEKS <b>×</b> BENNETT UNIVERSITY</span><strong>THE MULTIVERSE<br />PROTOCOL<span>.</span></strong></div><div className="footer-links">{Object.entries(event.social).map(([label, url]) => url ? <a key={label} href={url} target="_blank" rel="noopener noreferrer">{label}<ArrowUpRight size={15} /></a> : <Button key={label} variant="ghost" onClick={() => setNotice(true)}>{label}<ArrowUpRight size={15} /></Button>)}</div></div><div className="footer-bottom"><span>© 2026 GeeksForGeeks Student Chapter</span><span>BUILT FOR THE NEXT UNIVERSE</span><a href="#top">BACK TO TOP ↑</a></div></div></footer>
     {notice && <div className="notice-backdrop" onClick={() => setNotice(false)}><div className="notice-dialog" role="dialog" aria-modal="true" aria-labelledby="notice-title" onClick={e => e.stopPropagation()}><Button className="notice-close" variant="ghost" size="icon" onClick={() => setNotice(false)} aria-label="Close"><X size={20} /></Button><span className="eyebrow">TRANSMISSION PENDING</span><h2 id="notice-title">PORTAL OPENING SOON.</h2><p>The official link isn't available yet. Check back for registration and chapter updates.</p><Button className="primary-cta" onClick={() => setNotice(false)}>GOT IT <ArrowRight size={17} /></Button></div></div>}
   </main>;
 }
