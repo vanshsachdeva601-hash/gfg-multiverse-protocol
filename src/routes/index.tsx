@@ -80,10 +80,14 @@ function Index() {
         const entrance = smooth(position / .46);
         const fog = smooth(position / .26);
         const text = (from: number, to: number) => smooth((position - from) / (to - from));
+        const isHulk = scene.classList.contains("hulk");
+        const isLoki = scene.classList.contains("loki");
+        const artScale = isHulk
+          ? position < .4 ? .9 + smooth(position / .4) * .108 : 1.008 - smooth((position - .4) / .1) * .008
+          : isLoki ? .96 + entrance * .04 : 1.035 - entrance * .035;
         const variables: Record<string, number> = {
-          "--art-progress": entrance,
           "--art-opacity": smooth(position / .32),
-          "--atmosphere-progress": scene.classList.contains("loki") ? fog : entrance,
+          "--atmosphere-progress": isLoki ? fog : entrance,
           "--label-progress": text(.51, .61),
           "--role-progress": text(.57, .67),
           "--title-progress": text(.62, .75),
@@ -91,11 +95,15 @@ function Index() {
           "--description-progress": text(.78, .88),
           "--indicator-progress": text(.84, .94),
         };
-        // A restrained two-stage compression gives Hulk weight without an elastic bounce.
-        if (scene.classList.contains("hulk")) {
-          variables["--hulk-scale"] = position < .4 ? .9 + smooth(position / .4) * .108 : 1.008 - smooth((position - .4) / .1) * .008;
-        }
         for (const [name, value] of Object.entries(variables)) scene.style.setProperty(name, String(value));
+        scene.style.setProperty("--art-x", `${(1 - entrance) * (isLoki ? 42 : isHulk ? 0 : 105)}px`);
+        scene.style.setProperty("--art-y", `${(1 - entrance) * (isHulk ? 75 : isLoki ? 13 : 6)}px`);
+        scene.style.setProperty("--art-scale", String(artScale));
+        scene.style.setProperty("--art-blur", `${(1 - entrance) * (isLoki ? 7 : 0)}px`);
+        scene.style.setProperty("--atmosphere-y", `${(1 - (isLoki ? fog : entrance)) * (isLoki ? 30 : 14)}px`);
+        for (const key of ["label", "role", "title", "line", "description", "indicator"] as const) {
+          scene.style.setProperty(`--${key}-y`, `${(1 - variables[`--${key}-progress`]) * (key === "title" ? 29 : 18)}px`);
+        }
         scene.classList.add("scene-ready");
       }
     };
