@@ -136,7 +136,7 @@ function Index() {
   };
   const move = (e: React.MouseEvent<HTMLElement>) => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || window.matchMedia("(pointer: coarse)").matches) return;
-    setMouse({ x: (e.clientX / window.innerWidth - .5) * 16, y: (e.clientY / window.innerHeight - .5) * 12 });
+    if (e.currentTarget.classList.contains("hero")) setMouse({ x: (e.clientX / window.innerWidth - .5) * 16, y: (e.clientY / window.innerHeight - .5) * 12 });
     const bounds = e.currentTarget.getBoundingClientRect();
     e.currentTarget.style.setProperty("--pointer-x", String((e.clientX - bounds.left) / bounds.width * 2 - 1));
     e.currentTarget.style.setProperty("--pointer-y", String((e.clientY - bounds.top) / bounds.height * 2 - 1));
