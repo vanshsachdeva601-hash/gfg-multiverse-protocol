@@ -132,6 +132,59 @@ function Index() {
     return () => { window.removeEventListener("scroll", update); window.removeEventListener("scroll", scheduleScenes); window.removeEventListener("resize", scheduleScenes); reducedMotion.removeEventListener("change", scheduleScenes); cancelAnimationFrame(frame); observer.disconnect(); };
   }, []);
 
+  // Magnetic hero-text hover: headline leans a few px toward the cursor with a micro-tilt and emerald glow.
+  useEffect(() => {
+    const content = document.querySelector<HTMLElement>(".hero-content");
+    if (!content) return;
+    const fine = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (!fine.matches || reducedMotion.matches) return;
+    const targets = Array.from(content.querySelectorAll<HTMLElement>("[data-magnet]"));
+    if (!targets.length) return;
+    const clamp01 = (value: number) => Math.max(0, Math.min(1, value));
+    const cap = (value: number) => Math.max(-1, Math.min(1, value));
+    const smooth = (value: number) => { const t = clamp01(value); return t * t * (3 - 2 * t); };
+    const onMove = (e: PointerEvent) => {
+      for (const el of targets) {
+        const bounds = el.getBoundingClientRect();
+        const power = Number(el.dataset["magnet"]) || 1;
+        const px = Math.max(bounds.left, Math.min(e.clientX, bounds.right));
+        const py = Math.max(bounds.top, Math.min(e.clientY, bounds.bottom));
+        const distance = Math.hypot(e.clientX - px, e.clientY - py);
+        let strength: number, lean: number, rise: number;
+        if (distance > 0) {
+          const reach = 130;
+          strength = smooth(1 - distance / reach);
+          lean = cap((e.clientX - px) * .03);
+          rise = cap((e.clientY - py) * .06);
+        } else {
+          strength = 1;
+          lean = cap(bounds.width ? (e.clientX - (bounds.left + bounds.width / 2)) / (bounds.width / 2) * .6 : 0);
+          rise = cap(bounds.height ? (e.clientY - (bounds.top + bounds.height / 2)) / (bounds.height / 2) * .9 : 0);
+        }
+        el.style.setProperty("--magnet-x", `${(lean * 4 * power * strength).toFixed(2)}px`);
+        el.style.setProperty("--magnet-y", `${(rise * 2.5 * power * strength).toFixed(2)}px`);
+        el.style.setProperty("--magnet-rot", `${(lean * 1.3 * power * strength).toFixed(2)}deg`);
+        el.style.setProperty("--magnet-scale", (1 + .018 * power * strength).toFixed(4));
+        el.style.setProperty("--magnet-glow", (power * strength).toFixed(3));
+      }
+    };
+    const onLeave = () => {
+      for (const el of targets) {
+        el.style.setProperty("--magnet-x", "0px");
+        el.style.setProperty("--magnet-y", "0px");
+        el.style.setProperty("--magnet-rot", "0deg");
+        el.style.setProperty("--magnet-scale", "1");
+        el.style.setProperty("--magnet-glow", "0");
+      }
+    };
+    // The entrance animation's fill state would lock the transform; drop it once it has played.
+    for (const el of targets) if (getComputedStyle(el).animationName !== "none") el.addEventListener("animationend", () => { el.style.animation = "none"; }, { once: true });
+    content.addEventListener("pointermove", onMove, { passive: true });
+    content.addEventListener("pointerleave", onLeave);
+    return () => { content.removeEventListener("pointermove", onMove); content.removeEventListener("pointerleave", onLeave); };
+  }, []);
+
   const register = () => {
     if (event.registrationUrl) window.open(event.registrationUrl, "_blank", "noopener,noreferrer");
     else setNotice(true);
@@ -169,9 +222,9 @@ function Index() {
       <div className="hero-coordinate hero-coordinate-right" aria-hidden="true">EST. 2026 &nbsp; / &nbsp; GFG × BU</div>
       <div className="hero-content">
         <p className="eyebrow hero-eyebrow"><span className="signal-dot" /> GEEKSFORGEEKS STUDENT CHAPTER <span className="eyebrow-separator">/</span> BENNETT UNIVERSITY</p>
-        <p className="hero-pretitle">THE FUTURE IS NOT WRITTEN.</p>
-        <h1><span className="hero-title-line">THE MULTIVERSE</span><span className="hero-title-line outlined">PROTOCOL<span className="title-period">.</span></span></h1>
-        <div className="hero-under"><p>WHERE HEROES DON'T WEAR CAPES.<br /><strong>THEY WRITE CODE.</strong></p><Button className="primary-cta" onClick={() => document.querySelector("#mission")?.scrollIntoView({ behavior: "smooth" })}>ENTER THE MISSION <ArrowUpRight size={18} /></Button></div>
+        <p className="hero-pretitle" data-magnet="0.45">THE FUTURE IS NOT WRITTEN.</p>
+        <h1><span className="hero-title-line" data-magnet="1">THE MULTIVERSE</span><span className="hero-title-line outlined" data-magnet="1">PROTOCOL<span className="title-period">.</span></span></h1>
+        <div className="hero-under"><p data-magnet="0.4">WHERE HEROES DON'T WEAR CAPES.<br /><strong>THEY WRITE CODE.</strong></p><Button className="primary-cta" onClick={() => document.querySelector("#mission")?.scrollIntoView({ behavior: "smooth" })}>ENTER THE MISSION <ArrowUpRight size={18} /></Button></div>
       </div>
       <div className="hero-bottom"><span className="hero-index">001 <span>/</span> 007</span><div className="hero-meta"><span>{event.date}</span><span>{event.time}</span><span>{event.venue}</span></div><a href="#mission" className="scroll-cue">SCROLL TO EXPLORE <ArrowDown size={16} /></a></div>
     </section>
