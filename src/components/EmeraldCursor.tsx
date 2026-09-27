@@ -35,7 +35,7 @@ export function EmeraldCursor() {
       frame = 0;
     };
     const onPointerOut = (event: PointerEvent) => {
-      if (!event.relatedTarget && !document.documentElement.contains(event.target as Node)) hide();
+      if (!event.relatedTarget && (event.clientX <= 0 || event.clientY <= 0 || event.clientX >= window.innerWidth - 1 || event.clientY >= window.innerHeight - 1)) hide();
     };
     const syncAvailability = () => {
       enabled = finePointer.matches && !reducedMotion.matches;
