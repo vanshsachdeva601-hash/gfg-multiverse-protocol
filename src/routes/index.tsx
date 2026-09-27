@@ -77,8 +77,14 @@ function Index() {
         const start = window.innerHeight * .88;
         const end = window.innerHeight * .08;
         const position = clamp((start - bounds.top) / (start - end));
-        const entrance = smooth(position / .46);
-        const fog = smooth(position / .26);
+        const entrance = smooth(position / .44);
+        const fog = smooth(position / .28);
+        // Once the artwork lands, these values stop changing while the copy is read.
+        const depth = 1 - smooth(position / .44);
+        const nextScene = scene.nextElementSibling;
+        const nextTop = nextScene instanceof HTMLElement && nextScene.classList.contains("character-panel")
+          ? nextScene.getBoundingClientRect().top : window.innerHeight;
+        const handoff = smooth((window.innerHeight * .94 - nextTop) / (window.innerHeight * .48));
         const text = (from: number, to: number) => smooth((position - from) / (to - from));
         const isHulk = scene.classList.contains("hulk");
         const isLoki = scene.classList.contains("loki");
@@ -88,12 +94,13 @@ function Index() {
         const variables: Record<string, number> = {
           "--art-opacity": smooth(position / .32),
           "--atmosphere-progress": isLoki ? fog : entrance,
-          "--label-progress": text(.51, .61),
-          "--role-progress": text(.57, .67),
-          "--title-progress": text(.62, .75),
-          "--line-progress": text(.72, .82),
-          "--description-progress": text(.78, .88),
-          "--indicator-progress": text(.84, .94),
+          "--label-progress": text(.52, .61),
+          "--role-progress": text(.58, .67),
+          "--title-progress": text(.63, .74),
+          "--line-progress": text(.74, .83),
+          "--description-progress": text(.81, .9),
+          "--indicator-progress": text(.88, .96),
+          "--handoff-progress": handoff,
         };
         for (const [name, value] of Object.entries(variables)) scene.style.setProperty(name, String(value));
         scene.style.setProperty("--art-x", `${(1 - entrance) * (isLoki ? 42 : isHulk ? 0 : 105)}px`);
@@ -101,6 +108,9 @@ function Index() {
         scene.style.setProperty("--art-scale", String(artScale));
         scene.style.setProperty("--art-blur", `${(1 - entrance) * (isLoki ? 7 : 0)}px`);
         scene.style.setProperty("--atmosphere-y", `${(1 - (isLoki ? fog : entrance)) * (isLoki ? 30 : 14)}px`);
+        scene.style.setProperty("--background-drift", `${depth * (isLoki ? -16 : 13)}px`);
+        scene.style.setProperty("--light-scale", String(isHulk ? .86 + entrance * .14 : .94 + entrance * .06));
+        scene.style.setProperty("--light-opacity", String(isLoki ? fog : entrance));
         for (const key of ["label", "role", "title", "line", "description", "indicator"] as const) {
           scene.style.setProperty(`--${key}-y`, `${(1 - variables[`--${key}-progress`]) * (key === "title" ? 29 : 18)}px`);
         }
