@@ -8,4 +8,4 @@
 - [x] Verify desktop, mobile, and reduced-motion character scenes after the polish pass
 - [x] Add lightweight CSS depth accents to hero and existing character scenes
 - [x] Check desktop/mobile visibility, scroll motion, and reduced-motion behavior
-- [ ] Add and verify fine-pointer emerald cursor with subtle atmospheric response
+- [x] Add and verify fine-pointer emerald cursor with subtle atmospheric response
