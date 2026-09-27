@@ -90,7 +90,7 @@ function Index() {
 
     <section id="top" className="hero" onMouseMove={move}>
       <div className="hero-portal" style={{ transform: `translate3d(${mouse.x * -.4}px,${mouse.y * -.4}px,0) scale(1.06)` }}><img src={portal} alt="Emerald energy portal in a dark futuristic world" width={1536} height={1024} fetchPriority="high" /></div>
-      <div className="hero-grid" aria-hidden="true" /><div className="hero-vignette" aria-hidden="true" />
+      <div className="hero-figure" aria-hidden="true"><img src={doom} alt="" width={1024} height={1280} /></div><div className="hero-grid" aria-hidden="true" /><div className="hero-vignette" aria-hidden="true" />
       <div className="hero-coordinate hero-coordinate-left" aria-hidden="true">PROTOCOL // 001<br />UNIVERSE // PRIME</div>
       <div className="hero-coordinate hero-coordinate-right" aria-hidden="true">EST. 2026 &nbsp; / &nbsp; GFG × BU</div>
       <div className="hero-content">
