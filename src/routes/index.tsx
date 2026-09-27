@@ -65,12 +65,14 @@ function Index() {
     }, { threshold: .12, rootMargin: "0px 0px -35px 0px" });
     document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
     const scenes = Array.from(document.querySelectorAll<HTMLElement>(".character-panel"));
+    const hero = document.querySelector<HTMLElement>(".hero");
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const clamp = (value: number) => Math.max(0, Math.min(1, value));
     const smooth = (value: number) => { const t = clamp(value); return t * t * (3 - 2 * t); };
     let frame = 0;
     const updateScenes = () => {
       frame = 0;
+      if (hero) hero.style.setProperty("--hero-depth", reducedMotion.matches ? "0" : String(smooth(window.scrollY / (window.innerHeight * .8))));
       for (const scene of scenes) {
         if (reducedMotion.matches) { scene.classList.remove("scene-ready"); continue; }
         const bounds = scene.getBoundingClientRect();
@@ -101,6 +103,7 @@ function Index() {
           "--description-progress": text(.81, .9),
           "--indicator-progress": text(.88, .96),
           "--handoff-progress": handoff,
+          "--accent-progress": isHulk ? Math.sin(Math.PI * clamp(position / .62)) * .42 + .38 * entrance : isLoki ? fog : entrance,
         };
         for (const [name, value] of Object.entries(variables)) scene.style.setProperty(name, String(value));
         scene.style.setProperty("--art-x", `${(1 - entrance) * (isLoki ? 42 : isHulk ? 0 : 105)}px`);
@@ -111,8 +114,10 @@ function Index() {
         scene.style.setProperty("--background-drift", `${depth * (isLoki ? -16 : 13)}px`);
         scene.style.setProperty("--light-scale", String(isHulk ? .86 + entrance * .14 : .94 + entrance * .06));
         scene.style.setProperty("--light-opacity", String(isLoki ? fog : entrance));
+        scene.style.setProperty("--accent-drift", `${(1 - entrance) * (isHulk ? 22 : isLoki ? -18 : 14)}px`);
+        scene.style.setProperty("--accent-turn", `${(isLoki ? -12 : 11) * entrance}deg`);
         for (const key of ["label", "role", "title", "line", "description", "indicator"] as const) {
-          scene.style.setProperty(`--${key}-y`, `${(1 - variables[`--${key}-progress`]) * (key === "title" ? 29 : 18)}px`);
+          scene.style.setProperty(`--${key}-y`, `${(1 - (variables[`--${key}-progress`] ?? 0)) * (key === "title" ? 29 : 18)}px`);
         }
         scene.classList.add("scene-ready");
       }
@@ -130,8 +135,15 @@ function Index() {
     else setNotice(true);
   };
   const move = (e: React.MouseEvent<HTMLElement>) => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    setMouse({ x: (e.clientX / window.innerWidth - .5) * 16, y: (e.clientY / window.innerHeight - .5) * 12 });
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || window.matchMedia("(pointer: coarse)").matches) return;
+    if (e.currentTarget.classList.contains("hero")) setMouse({ x: (e.clientX / window.innerWidth - .5) * 16, y: (e.clientY / window.innerHeight - .5) * 12 });
+    const bounds = e.currentTarget.getBoundingClientRect();
+    e.currentTarget.style.setProperty("--pointer-x", String((e.clientX - bounds.left) / bounds.width * 2 - 1));
+    e.currentTarget.style.setProperty("--pointer-y", String((e.clientY - bounds.top) / bounds.height * 2 - 1));
+  };
+  const resetPointer = (e: React.MouseEvent<HTMLElement>) => {
+    e.currentTarget.style.setProperty("--pointer-x", "0");
+    e.currentTarget.style.setProperty("--pointer-y", "0");
   };
   return <main>
     <div className="scroll-progress" style={{ width: `${progress}%` }} aria-hidden="true" />
@@ -146,8 +158,9 @@ function Index() {
       {menuOpen && <nav className="mobile-nav" aria-label="Mobile navigation">{nav.map(item => <a key={item.label} href={item.href} onClick={() => setMenuOpen(false)}>{item.label}<ArrowUpRight size={18} /></a>)}</nav>}
     </header>
 
-    <section id="top" className="hero" onMouseMove={move}>
+    <section id="top" className="hero" onMouseMove={move} onMouseLeave={resetPointer}>
       <div className="hero-portal" style={{ transform: `translate3d(${mouse.x * -.4}px,${mouse.y * -.4}px,0) scale(1.06)` }}><img src={portal} alt="Emerald energy portal in a dark futuristic world" width={1536} height={1024} fetchPriority="high" /></div>
+      <div className="energy-core" aria-hidden="true"><span className="energy-core-rim"><i /><b /><em /></span></div>
       <div className="hero-figure" aria-hidden="true"><img src={doom} alt="" width={1024} height={1280} /></div><div className="hero-grid" aria-hidden="true" /><div className="hero-vignette" aria-hidden="true" />
       <div className="hero-coordinate hero-coordinate-left" aria-hidden="true">PROTOCOL // 001<br />UNIVERSE // PRIME</div>
       <div className="hero-coordinate hero-coordinate-right" aria-hidden="true">EST. 2026 &nbsp; / &nbsp; GFG × BU</div>
@@ -166,7 +179,7 @@ function Index() {
 
     <section id="highlights" className="objectives section-pad"><div className="section-container"><div className="section-heading reveal"><SectionLabel number="02" text="YOUR OBJECTIVES" /><h2>MISSION <em>OBJECTIVES</em></h2><p>FOUR WAYS TO CHANGE THE GAME.</p></div><div className="objectives-grid">{event.highlights.map((item, i) => { const Icon = icons[i] ?? Crosshair; return <article className="objective reveal" key={item.number} style={{ transitionDelay: `${i * 85}ms` }}><div className="objective-top"><span>{item.number} / 04</span><Icon size={23} strokeWidth={1.4} /></div><div className="objective-bottom"><span className="objective-symbol" aria-hidden="true">{item.symbol}</span><h3>{item.title}</h3><p>{item.description}</p><ArrowUpRight className="objective-arrow" size={18} /></div></article>; })}</div></div></section>
 
-    <section id="heroes" className="heroes"><div className="heroes-intro section-container reveal"><SectionLabel number="03" text="SELECT YOUR PATH" /><h2>CHOOSE<br /><em>YOUR HERO.</em></h2><p>THREE FORCES. INFINITE POSSIBILITIES.</p><ChevronDown size={22} /></div>{characters.map(character => <article className={`character-panel ${character.className}`} key={character.name}><div className="character-atmosphere" /><div className="character-image"><img src={character.image} alt={`Cinematic artwork representing ${character.name}`} loading="lazy" width={1024} height={1280} /></div><div className="character-ghost" aria-hidden="true">{character.name}</div><div className="character-content section-container"><div className="character-heading"><span className="character-number">CHARACTER FILE / {character.number}</span><span className="character-dash" /></div><div className="character-text"><p className="eyebrow">{character.role}</p><h3>{character.name}</h3><p className="character-line">{character.line}</p><p className="character-description">{character.description}</p><span className="character-indicator">◈ &nbsp; MULTIVERSE ENTITY {character.number}</span></div></div><div className="character-edge" aria-hidden="true">{character.number} / 03 &nbsp; — &nbsp; {character.role}</div></article>)}</section>
+    <section id="heroes" className="heroes"><div className="heroes-intro section-container reveal"><SectionLabel number="03" text="SELECT YOUR PATH" /><h2>CHOOSE<br /><em>YOUR HERO.</em></h2><p>THREE FORCES. INFINITE POSSIBILITIES.</p><ChevronDown size={22} /></div>{characters.map(character => <article className={`character-panel ${character.className}`} key={character.name} onMouseMove={move} onMouseLeave={resetPointer}><div className="character-atmosphere" /><div className="character-image"><img src={character.image} alt={`Cinematic artwork representing ${character.name}`} loading="lazy" width={1024} height={1280} /></div><SceneAccent kind={character.className} /><div className="character-ghost" aria-hidden="true">{character.name}</div><div className="character-content section-container"><div className="character-heading"><span className="character-number">CHARACTER FILE / {character.number}</span><span className="character-dash" /></div><div className="character-text"><p className="eyebrow">{character.role}</p><h3>{character.name}</h3><p className="character-line">{character.line}</p><p className="character-description">{character.description}</p><span className="character-indicator">◈ &nbsp; MULTIVERSE ENTITY {character.number}</span></div></div><div className="character-edge" aria-hidden="true">{character.number} / 03 &nbsp; — &nbsp; {character.role}</div></article>)}</section>
 
     <section id="timeline" className="timeline section-pad"><div className="section-container timeline-layout"><div className="timeline-title reveal"><SectionLabel number="04" text="THE SEQUENCE" /><h2>MISSION<br /><em>TIMELINE.</em></h2><p>EVERY GREAT STORY HAS A BEGINNING.</p><span className="placeholder-note">SAMPLE SCHEDULE — SUBJECT TO CHANGE</span></div><div className="timeline-list">{event.timeline.map((item, i) => <div className="timeline-item reveal" key={item.time} style={{ transitionDelay: `${i * 50}ms` }}><span className="timeline-node" /><span className="timeline-time">{item.time}</span><h3>{item.title}</h3><span className="timeline-count">0{i+1}</span></div>)}</div></div></section>
 
@@ -182,3 +195,8 @@ function Index() {
   </main>;
 }
 function SectionLabel({ number, text }: { number: string, text: string }) { return <div className="section-label"><span className="label-diamond">◇</span><span>{number} / 07</span><i />{text}</div>; }
+function SceneAccent({ kind }: { kind: string }) {
+  if (kind === "doom") return <div className="scene-accent doom-insignia" aria-hidden="true"><span className="insignia-shell"><i /><b /><em /></span></div>;
+  if (kind === "hulk") return <div className="scene-accent hulk-fragments" aria-hidden="true">{Array.from({ length: 9 }, (_, i) => <i key={i} />)}</div>;
+  return <div className="scene-accent loki-gateway" aria-hidden="true"><span className="gateway-outer"><i /><b /><em /></span></div>;
+}

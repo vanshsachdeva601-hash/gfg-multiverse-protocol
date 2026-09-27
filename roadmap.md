@@ -6,3 +6,5 @@
 - [x] Verify settled states, mobile readability, reduced motion, and preview errors
 - [x] Polish character-led scroll timing, layered depth, and chapter handoffs without altering artwork or layout
 - [x] Verify desktop, mobile, and reduced-motion character scenes after the polish pass
+- [x] Add lightweight CSS depth accents to hero and existing character scenes
+- [x] Check desktop/mobile visibility, scroll motion, and reduced-motion behavior
