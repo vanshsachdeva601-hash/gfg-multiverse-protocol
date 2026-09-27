@@ -8,3 +8,6 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Keep sample event details, links, highlights, and timeline in `src/lib/event-config.ts` so future event updates are made in one place.
+- Keep the campaign as a single TanStack index route with CSS and IntersectionObserver-driven reveals; this minimizes page weight while preserving a cinematic scroll experience.
