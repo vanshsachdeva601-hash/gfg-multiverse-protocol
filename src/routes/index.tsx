@@ -64,7 +64,47 @@ function Index() {
       entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add("is-visible"); observer.unobserve(entry.target); } });
     }, { threshold: .12, rootMargin: "0px 0px -35px 0px" });
     document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
-    return () => { window.removeEventListener("scroll", update); observer.disconnect(); };
+    const scenes = Array.from(document.querySelectorAll<HTMLElement>(".character-panel"));
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const clamp = (value: number) => Math.max(0, Math.min(1, value));
+    const smooth = (value: number) => { const t = clamp(value); return t * t * (3 - 2 * t); };
+    let frame = 0;
+    const updateScenes = () => {
+      frame = 0;
+      for (const scene of scenes) {
+        if (reducedMotion.matches) { scene.classList.remove("scene-ready"); continue; }
+        const bounds = scene.getBoundingClientRect();
+        const start = window.innerHeight * .88;
+        const end = window.innerHeight * .08;
+        const position = clamp((start - bounds.top) / (start - end));
+        const entrance = smooth(position / .46);
+        const fog = smooth(position / .26);
+        const text = (from: number, to: number) => smooth((position - from) / (to - from));
+        const variables: Record<string, number> = {
+          "--art-progress": entrance,
+          "--art-opacity": smooth(position / .32),
+          "--atmosphere-progress": scene.classList.contains("loki") ? fog : entrance,
+          "--label-progress": text(.51, .61),
+          "--role-progress": text(.57, .67),
+          "--title-progress": text(.62, .75),
+          "--line-progress": text(.72, .82),
+          "--description-progress": text(.78, .88),
+          "--indicator-progress": text(.84, .94),
+        };
+        // A restrained two-stage compression gives Hulk weight without an elastic bounce.
+        if (scene.classList.contains("hulk")) {
+          variables["--hulk-scale"] = position < .4 ? .9 + smooth(position / .4) * .108 : 1.008 - smooth((position - .4) / .1) * .008;
+        }
+        for (const [name, value] of Object.entries(variables)) scene.style.setProperty(name, String(value));
+        scene.classList.add("scene-ready");
+      }
+    };
+    const scheduleScenes = () => { if (!frame) frame = requestAnimationFrame(updateScenes); };
+    scheduleScenes();
+    window.addEventListener("scroll", scheduleScenes, { passive: true });
+    window.addEventListener("resize", scheduleScenes);
+    reducedMotion.addEventListener("change", scheduleScenes);
+    return () => { window.removeEventListener("scroll", update); window.removeEventListener("scroll", scheduleScenes); window.removeEventListener("resize", scheduleScenes); reducedMotion.removeEventListener("change", scheduleScenes); cancelAnimationFrame(frame); observer.disconnect(); };
   }, []);
 
   const register = () => {
@@ -108,7 +148,7 @@ function Index() {
 
     <section id="highlights" className="objectives section-pad"><div className="section-container"><div className="section-heading reveal"><SectionLabel number="02" text="YOUR OBJECTIVES" /><h2>MISSION <em>OBJECTIVES</em></h2><p>FOUR WAYS TO CHANGE THE GAME.</p></div><div className="objectives-grid">{event.highlights.map((item, i) => { const Icon = icons[i] ?? Crosshair; return <article className="objective reveal" key={item.number} style={{ transitionDelay: `${i * 85}ms` }}><div className="objective-top"><span>{item.number} / 04</span><Icon size={23} strokeWidth={1.4} /></div><div className="objective-bottom"><span className="objective-symbol" aria-hidden="true">{item.symbol}</span><h3>{item.title}</h3><p>{item.description}</p><ArrowUpRight className="objective-arrow" size={18} /></div></article>; })}</div></div></section>
 
-    <section id="heroes" className="heroes"><div className="heroes-intro section-container reveal"><SectionLabel number="03" text="SELECT YOUR PATH" /><h2>CHOOSE<br /><em>YOUR HERO.</em></h2><p>THREE FORCES. INFINITE POSSIBILITIES.</p><ChevronDown size={22} /></div>{characters.map(character => <article className={`character-panel ${character.className}`} key={character.name}><div className="character-atmosphere" /><div className="character-image"><img src={character.image} alt={`Cinematic artwork representing ${character.name}`} loading="lazy" width={1024} height={1280} /></div><div className="character-ghost" aria-hidden="true">{character.name}</div><div className="character-content section-container reveal"><div className="character-heading"><span className="character-number">CHARACTER FILE / {character.number}</span><span className="character-dash" /></div><div className="character-text"><p className="eyebrow">{character.role}</p><h3>{character.name}</h3><p className="character-line">{character.line}</p><p className="character-description">{character.description}</p><span className="character-indicator">◈ &nbsp; MULTIVERSE ENTITY {character.number}</span></div></div><div className="character-edge" aria-hidden="true">{character.number} / 03 &nbsp; — &nbsp; {character.role}</div></article>)}</section>
+    <section id="heroes" className="heroes"><div className="heroes-intro section-container reveal"><SectionLabel number="03" text="SELECT YOUR PATH" /><h2>CHOOSE<br /><em>YOUR HERO.</em></h2><p>THREE FORCES. INFINITE POSSIBILITIES.</p><ChevronDown size={22} /></div>{characters.map(character => <article className={`character-panel ${character.className}`} key={character.name}><div className="character-atmosphere" /><div className="character-image"><img src={character.image} alt={`Cinematic artwork representing ${character.name}`} loading="lazy" width={1024} height={1280} /></div><div className="character-ghost" aria-hidden="true">{character.name}</div><div className="character-content section-container"><div className="character-heading"><span className="character-number">CHARACTER FILE / {character.number}</span><span className="character-dash" /></div><div className="character-text"><p className="eyebrow">{character.role}</p><h3>{character.name}</h3><p className="character-line">{character.line}</p><p className="character-description">{character.description}</p><span className="character-indicator">◈ &nbsp; MULTIVERSE ENTITY {character.number}</span></div></div><div className="character-edge" aria-hidden="true">{character.number} / 03 &nbsp; — &nbsp; {character.role}</div></article>)}</section>
 
     <section id="timeline" className="timeline section-pad"><div className="section-container timeline-layout"><div className="timeline-title reveal"><SectionLabel number="04" text="THE SEQUENCE" /><h2>MISSION<br /><em>TIMELINE.</em></h2><p>EVERY GREAT STORY HAS A BEGINNING.</p><span className="placeholder-note">SAMPLE SCHEDULE — SUBJECT TO CHANGE</span></div><div className="timeline-list">{event.timeline.map((item, i) => <div className="timeline-item reveal" key={item.time} style={{ transitionDelay: `${i * 50}ms` }}><span className="timeline-node" /><span className="timeline-time">{item.time}</span><h3>{item.title}</h3><span className="timeline-count">0{i+1}</span></div>)}</div></div></section>
 
