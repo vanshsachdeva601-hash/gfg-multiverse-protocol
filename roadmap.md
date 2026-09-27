@@ -9,3 +9,4 @@
 - [x] Add lightweight CSS depth accents to hero and existing character scenes
 - [x] Check desktop/mobile visibility, scroll motion, and reduced-motion behavior
 - [x] Add and verify fine-pointer emerald cursor with subtle atmospheric response
+- [x] Add and verify selective dark-emerald glass on the header, existing information/cards, and registration area
