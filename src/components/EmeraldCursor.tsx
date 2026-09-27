@@ -34,6 +34,9 @@ export function EmeraldCursor() {
       cancelAnimationFrame(frame);
       frame = 0;
     };
+    const onPointerOut = (event: PointerEvent) => {
+      if (!event.relatedTarget && !document.documentElement.contains(event.target as Node)) hide();
+    };
     const syncAvailability = () => {
       enabled = finePointer.matches && !reducedMotion.matches;
       document.documentElement.classList.toggle("emerald-cursor-active", enabled);
@@ -75,13 +78,13 @@ export function EmeraldCursor() {
 
     syncAvailability();
     window.addEventListener("pointermove", onMove, { passive: true });
-    document.addEventListener("pointerleave", hide);
+    window.addEventListener("pointerout", onPointerOut);
     window.addEventListener("blur", hide);
     finePointer.addEventListener("change", syncAvailability);
     reducedMotion.addEventListener("change", syncAvailability);
     return () => {
       window.removeEventListener("pointermove", onMove);
-      document.removeEventListener("pointerleave", hide);
+      window.removeEventListener("pointerout", onPointerOut);
       window.removeEventListener("blur", hide);
       finePointer.removeEventListener("change", syncAvailability);
       reducedMotion.removeEventListener("change", syncAvailability);
