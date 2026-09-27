@@ -281,7 +281,6 @@ em { color: var(--primary); font-style: normal; }
   transform: translate3d(var(--art-x),var(--art-y),0) scale(var(--art-scale));
   opacity: var(--art-opacity);
   filter: blur(var(--art-blur));
-  will-change: transform, opacity;
 }
 .character-panel.scene-ready .character-atmosphere {
   transform: translate3d(0,var(--atmosphere-y),0) scale(calc(.88 + var(--atmosphere-progress) * .12));
@@ -293,7 +292,7 @@ em { color: var(--primary); font-style: normal; }
 .character-panel.hulk.scene-ready .character-atmosphere::before { background: radial-gradient(ellipse at 72% 55%,var(--energy),transparent 48%); opacity: calc(var(--light-opacity) * .22); }
 .character-panel.loki.scene-ready .character-atmosphere::before { background: radial-gradient(ellipse at 63% 48%,var(--primary),transparent 56%); opacity: calc(var(--light-opacity) * .17); transform: translate3d(0,calc(var(--background-drift) * -1),0) scale(var(--light-scale)); }
 /* The next chapter's atmosphere starts at the lower edge before its artwork enters. */
-.character-panel.doom.scene-ready::after, .character-panel.hulk.scene-ready::after { content: ""; position: absolute; inset: auto 0 0; height: 25%; pointer-events: none; z-index: 1; opacity: calc(var(--handoff-progress) * .38); }
+.character-panel.doom.scene-ready::after, .character-panel.hulk.scene-ready::after { content: ""; position: absolute; inset: auto 0 0; height: 18%; pointer-events: none; z-index: 1; opacity: calc(var(--handoff-progress) * .16); }
 .character-panel.doom.scene-ready::after { background: linear-gradient(0deg,var(--primary),transparent); }
 .character-panel.hulk.scene-ready::after { background: linear-gradient(0deg,var(--deep-green),transparent); }
 .character-panel.scene-ready .character-ghost { transform: translate3d(0,calc((1 - var(--title-progress)) * 22px),0); opacity: var(--title-progress); }
