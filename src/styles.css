@@ -275,3 +275,35 @@ em { color: var(--primary); font-style: normal; }
 @keyframes figure-arrive { from { opacity: 0; transform: translateX(55px) scale(1.06); } to { opacity: .8; transform: translateX(0) scale(1); } }
 @media (max-width: 700px) { .hero-figure { width: 82%; height: 67%; right: -20%; opacity: .52; mask-image: linear-gradient(90deg,transparent,black 34%,black 90%,transparent),linear-gradient(0deg,transparent,black 40%,black 90%,transparent); }.character-image { right: -7%; width: 115%; } }
 @media (prefers-reduced-motion: reduce) { .hero-figure { opacity: .65; } }
+
+/* Character scenes: the artwork arrives first; the file, title and details follow as scrolling continues. */
+.character-panel.scene-ready .character-image {
+  transform: translate3d(var(--art-x),var(--art-y),0) scale(var(--art-scale));
+  opacity: var(--art-opacity);
+  filter: blur(var(--art-blur));
+  will-change: transform, opacity;
+}
+.character-panel.scene-ready .character-atmosphere {
+  transform: translate3d(0,var(--atmosphere-y),0) scale(calc(.88 + var(--atmosphere-progress) * .12));
+  opacity: calc(.34 + var(--atmosphere-progress) * .66);
+  will-change: transform, opacity;
+}
+.character-panel.scene-ready .character-ghost { transform: translate3d(0,calc((1 - var(--title-progress)) * 22px),0); opacity: var(--title-progress); }
+.character-panel.scene-ready .character-heading { opacity: var(--label-progress); transform: translate3d(0,var(--label-y),0); }
+.character-panel.scene-ready .character-text .eyebrow { opacity: var(--role-progress); transform: translate3d(0,var(--role-y),0); }
+.character-panel.scene-ready .character-text h3 { opacity: var(--title-progress); transform: translate3d(0,var(--title-y),0); clip-path: inset(calc((1 - var(--title-progress)) * 100%) 0 0 0); }
+.character-panel.scene-ready .character-line { opacity: var(--line-progress); transform: translate3d(0,var(--line-y),0); }
+.character-panel.scene-ready .character-description { opacity: var(--description-progress); transform: translate3d(0,var(--description-y),0); }
+.character-panel.scene-ready .character-indicator, .character-panel.scene-ready .character-edge { opacity: var(--indicator-progress); transform: translate3d(0,var(--indicator-y),0); }
+/* Preserve the original hover finish only after the character has nearly settled. */
+.character-panel.scene-ready:hover .character-image img { transform: scale(1.07); }
+.character-panel.scene-ready .character-image img { transition: none; }
+@media (max-width: 700px) {
+  .character-panel.scene-ready .character-image { transform: translate3d(calc(var(--art-x) * .28),calc(var(--art-y) * .55),0) scale(var(--art-scale)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .character-panel.scene-ready .character-image, .character-panel.scene-ready .character-atmosphere, .character-panel.scene-ready .character-ghost,
+  .character-panel.scene-ready .character-heading, .character-panel.scene-ready .character-text .eyebrow, .character-panel.scene-ready .character-text h3,
+  .character-panel.scene-ready .character-line, .character-panel.scene-ready .character-description, .character-panel.scene-ready .character-indicator,
+  .character-panel.scene-ready .character-edge { transform: none; opacity: 1; filter: none; clip-path: none; }
+}
