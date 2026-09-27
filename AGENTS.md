@@ -12,3 +12,4 @@
 - Keep sample event details, links, highlights, and timeline in `src/lib/event-config.ts` so future event updates are made in one place.
 - Keep the campaign as a single TanStack index route with CSS and IntersectionObserver-driven reveals; this minimizes page weight while preserving a cinematic scroll experience.
 - Build decorative scene depth with CSS transforms and existing scroll progress rather than WebGL dependencies; it keeps the campaign lightweight on mobile.
+- Keep the decorative cursor isolated in a fine-pointer-only component and move only background atmosphere by at most 3px; it preserves character entrances and touch accessibility.

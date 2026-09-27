@@ -363,3 +363,21 @@ em { color: var(--primary); font-style: normal; }
   .energy-core-rim,.insignia-shell,.hulk-fragments i,.gateway-outer { animation: none; }
   .scene-accent { opacity: .35; }.hulk-fragments { opacity: .2; }.loki-gateway { opacity: .18; }
 }
+
+/* Fine-pointer-only emerald energy cursor; the native cursor remains on touch and reduced motion. */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .emerald-cursor-active, .emerald-cursor-active * { cursor: none !important; }
+  .emerald-cursor-active .hero-grid,
+  .emerald-cursor-active .character-atmosphere::before {
+    translate: var(--cursor-parallax-x, 0px) var(--cursor-parallax-y, 0px);
+    transition: translate .35s ease-out;
+  }
+}
+.emerald-cursor { position: fixed; inset: 0 auto auto 0; z-index: 200; pointer-events: none; opacity: 0; transition: opacity .18s ease; }
+.emerald-cursor-visible .emerald-cursor { opacity: 1; }
+.emerald-cursor-dot, .emerald-cursor-ring { position: fixed; left: 0; top: 0; display: block; border-radius: 50%; pointer-events: none; }
+.emerald-cursor-dot { width: 6px; height: 6px; background: var(--energy); box-shadow: 0 0 7px var(--energy), 0 0 14px var(--primary); }
+.emerald-cursor-ring { width: 26px; height: 26px; border: 1px solid var(--primary); box-shadow: 0 0 9px var(--line), inset 0 0 5px var(--line); opacity: .72; transition: width .22s ease, height .22s ease, margin .22s ease, box-shadow .22s ease, opacity .22s ease; }
+.emerald-cursor-hover .emerald-cursor-ring { width: 34px; height: 34px; margin: -4px; opacity: .95; box-shadow: 0 0 13px var(--primary), inset 0 0 7px var(--line); }
+.emerald-cursor-hover .emerald-cursor-dot { box-shadow: 0 0 9px var(--energy), 0 0 19px var(--primary); }
+@media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) { .emerald-cursor { display: none; } }

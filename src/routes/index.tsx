@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ArrowDown, ArrowRight, ArrowUpRight, Menu, X, Crosshair, Zap, Radio, Award, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { EmeraldCursor } from "@/components/EmeraldCursor";
 import { event } from "@/lib/event-config";
 import portal from "@/assets/portal.jpg";
 import doom from "@/assets/armored-hero.jpg";
@@ -147,6 +148,7 @@ function Index() {
     e.currentTarget.style.setProperty("--pointer-y", "0");
   };
   return <main>
+    <EmeraldCursor />
     <div className="scroll-progress" style={{ width: `${progress}%` }} aria-hidden="true" />
     <header className={`site-header ${scrolled || menuOpen ? "scrolled" : ""}`}>
       <a className="brand" href="#top" aria-label="GeeksForGeeks Bennett University, back to top">
