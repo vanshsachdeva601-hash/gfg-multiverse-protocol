@@ -223,6 +223,10 @@ em { color: var(--primary); font-style: normal; }
 .hero-under { display: flex; align-items: end; gap: 55px; margin-top: 43px; animation: rise-in .9s 1s both; }
 .hero-under p { font: 600 17px/1.5 var(--font-display); letter-spacing: 1px; margin: 0; }
 .hero-under p strong { color: var(--energy); font-weight: 800; }
+/* Magnetic hero-text hover — a few px of lean, micro-tilt, faint emerald glow; fine pointers only (JS gates it). */
+.hero-title-line,.hero-pretitle,.hero-under p { transform: translate3d(var(--magnet-x,0px),var(--magnet-y,0px),0) rotate(var(--magnet-rot,0deg)) scale(var(--magnet-scale,1)); transition: transform .5s cubic-bezier(.2,.6,.25,1), text-shadow .45s ease; will-change: transform; }
+.hero-title-line { text-shadow: 0 8px 35px oklch(0.08 0.01 155 / 60%), 0 0 calc(var(--magnet-glow,0) * 36px) oklch(0.86 0.26 137 / calc(var(--magnet-glow,0) * 30%)); }
+.hero-pretitle,.hero-under p { text-shadow: 0 0 calc(var(--magnet-glow,0) * 20px) oklch(0.7 0.2 145 / calc(var(--magnet-glow,0) * 28%)); }
 .primary-cta { height: 56px; padding: 0 26px; border-radius: 0; background: var(--primary); color: var(--primary-foreground); font-size: 11px; font-weight: 800; letter-spacing: 1.3px; box-shadow: 0 0 0 1px var(--primary),0 0 35px oklch(0.7 0.2 145 / 18%); transition: background .3s, box-shadow .3s, transform .3s; }
 .primary-cta:hover { background: var(--energy); box-shadow: 0 0 35px oklch(0.86 0.26 137 / 45%); transform: translateY(-3px); }
 .hero-coordinate { position: absolute; color: var(--muted-foreground); line-height: 1.8; opacity: .7; }
