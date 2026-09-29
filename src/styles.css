@@ -217,7 +217,7 @@ em { color: var(--primary); font-style: normal; }
 .signal-dot { width: 6px; height: 6px; background: var(--energy); border-radius: 50%; box-shadow: 0 0 12px var(--energy); }
 .eyebrow-separator { color: var(--primary); }
 .hero-pretitle { color: var(--primary); margin-bottom: 15px; animation: rise-in .9s .45s both; }
-.hero h1 { font-size: clamp(80px,10.7vw,182px); letter-spacing: 0; line-height: 1.02; margin: 0; max-width: 1320px; text-shadow: 0 8px 35px oklch(0.08 0.01 155 / 60%); }
+.hero h1 { font-size: clamp(80px,10.7vw,182px); letter-spacing: 0; line-height: 1.17; margin: 0; max-width: 1320px; text-shadow: 0 8px 35px oklch(0.08 0.01 155 / 60%); }
 .hero-title-line { display: block; white-space: nowrap; animation: rise-in 1.15s .55s both; }
 .hero-title-line.outlined { color: transparent; -webkit-text-stroke: 1.5px var(--foreground); animation-delay: .72s; }
 .title-period { color: var(--energy); -webkit-text-stroke: 0; }
@@ -244,7 +244,7 @@ em { color: var(--primary); font-style: normal; }
 .mission { background: var(--background); border-bottom: 1px solid var(--line); }.mission-layout { display: grid; grid-template-columns: 33% 1fr; gap: 5%; }
 .mission-aside { display: flex; flex-direction: column; align-items: start; }.mission-sigil { width: 250px; height: 250px; border: 1px solid var(--line); border-radius: 50%; position: relative; display: grid; place-items: center; margin: 75px 0 35px; box-shadow: inset 0 0 45px oklch(0.4 0.1 145 / 10%),0 0 40px oklch(0.4 0.1 145 / 6%); }
 .mission-sigil:before,.mission-sigil:after { content: ""; position: absolute; inset: 20px; border: 1px dashed var(--line); border-radius: 50%; }.mission-sigil:after { inset: 53px; border-style: solid; }
-.mission-sigil span { font: 800 105px/1 var(--font-display); color: var(--primary); }.mission-sigil i { position: absolute; font: normal 25px var(--font-display); color: var(--energy); bottom: 70px; right: 70px; }
+.mission-sigil span { font: 700 105px/1 var(--font-display); color: var(--primary); }.mission-sigil i { position: absolute; font: 600 25px var(--font-display); color: var(--energy); bottom: 70px; right: 70px; }
 .side-note { color: var(--muted-foreground); line-height: 1.7; }.mission-kicker { color: var(--muted-foreground); margin-bottom: 26px; }
 .mission-statement { font-size: clamp(60px,7vw,112px); line-height: .96; margin: 0 0 62px; }
 .mission-copy { display: grid; grid-template-columns: 56px 1fr; border-top: 1px solid var(--line); padding-top: 32px; max-width: 670px; }.small-cross { color: var(--energy); font-size: 24px; }.mission-copy p { color: var(--muted-foreground); font-size: 15px; line-height: 1.85; margin: 0 0 17px; }.mission-copy p:first-child { color: var(--foreground); font-size: 17px; }
