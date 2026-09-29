@@ -92,11 +92,14 @@ function Index() {
         const text = (from: number, to: number) => smooth((position - from) / (to - from));
         const isHulk = scene.classList.contains("hulk");
         const isLoki = scene.classList.contains("loki");
+        // Three arrival weights share one landing point, leaving a quiet beat before the copy.
+        const arrival = isHulk ? 1 - Math.pow(1 - clamp(position / .44), 2.4)
+          : isLoki ? smooth(position / .48) : entrance;
         const artScale = isHulk
-          ? position < .4 ? .9 + smooth(position / .4) * .108 : 1.008 - smooth((position - .4) / .1) * .008
-          : isLoki ? .96 + entrance * .04 : 1.035 - entrance * .035;
+          ? position < .39 ? .94 + smooth(position / .39) * .064 : 1.004 - smooth((position - .39) / .09) * .004
+          : isLoki ? .975 + arrival * .025 : 1.025 - arrival * .025;
         const variables: Record<string, number> = {
-          "--art-opacity": smooth(position / .32),
+          "--art-opacity": smooth(position / (isLoki ? .43 : isHulk ? .36 : .34)),
           "--atmosphere-progress": isLoki ? fog : entrance,
           "--label-progress": text(.52, .61),
           "--role-progress": text(.58, .67),
@@ -108,14 +111,14 @@ function Index() {
           "--accent-progress": isHulk ? Math.sin(Math.PI * clamp(position / .62)) * .42 + .38 * entrance : isLoki ? fog : entrance,
         };
         for (const [name, value] of Object.entries(variables)) scene.style.setProperty(name, String(value));
-        scene.style.setProperty("--art-x", `${(1 - entrance) * (isLoki ? 42 : isHulk ? 0 : 105)}px`);
-        scene.style.setProperty("--art-y", `${(1 - entrance) * (isHulk ? 75 : isLoki ? 13 : 6)}px`);
+        scene.style.setProperty("--art-x", `${(1 - arrival) * (isLoki ? 20 : isHulk ? 0 : 34)}px`);
+        scene.style.setProperty("--art-y", `${(1 - arrival) * (isHulk ? 50 : isLoki ? 24 : 18)}px`);
         scene.style.setProperty("--art-scale", String(artScale));
-        scene.style.setProperty("--art-blur", `${(1 - entrance) * (isLoki ? 7 : 0)}px`);
+        scene.style.setProperty("--art-blur", `${(1 - arrival) * (isLoki ? 3 : 0)}px`);
         scene.style.setProperty("--atmosphere-y", `${(1 - (isLoki ? fog : entrance)) * (isLoki ? 30 : 14)}px`);
         scene.style.setProperty("--background-drift", `${depth * (isLoki ? -16 : 13)}px`);
         scene.style.setProperty("--light-scale", String(isHulk ? .86 + entrance * .14 : .94 + entrance * .06));
-        scene.style.setProperty("--light-opacity", String(isLoki ? fog : entrance));
+        scene.style.setProperty("--light-opacity", String((isLoki ? fog : entrance) * (1 - handoff * .18)));
         scene.style.setProperty("--accent-drift", `${(1 - entrance) * (isHulk ? 22 : isLoki ? -18 : 14)}px`);
         scene.style.setProperty("--accent-turn", `${(isLoki ? -12 : 11) * entrance}deg`);
         for (const key of ["label", "role", "title", "line", "description", "indicator"] as const) {
