@@ -312,7 +312,7 @@ em { color: var(--primary); font-style: normal; }
 .character-panel.scene-ready:hover .character-image img { transform: scale(1.07); }
 .character-panel.scene-ready .character-image img { transition: none; }
 @media (max-width: 700px) {
-  .character-panel.scene-ready .character-image { transform: translate3d(calc(var(--art-x) * .28),calc(var(--art-y) * .55),0) scale(var(--art-scale)); }
+  .character-panel.scene-ready .character-image { transform: translate3d(calc(var(--art-x) * .2),calc(var(--art-y) * .4),0) scale(calc(.97 + var(--art-opacity) * .03)); filter: none; }
   .character-panel.scene-ready .character-atmosphere::before { transform: translate3d(0,calc(var(--background-drift) * .4),0) scale(var(--light-scale)); }
 }
 @media (prefers-reduced-motion: reduce) {
