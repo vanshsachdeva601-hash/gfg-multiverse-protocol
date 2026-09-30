@@ -491,3 +491,41 @@ em { color: var(--primary); font-style: normal; }
   .final-cta.reveal, .final-cta.reveal .final-inner > * { opacity: 1; transform: none; }
   .final-cta.reveal.is-visible::after { animation: none; }
 }
+
+/* Emerald hover glow — major headings only. Pure CSS: transition + text-shadow + transform. */
+.hero h1 { transition: transform .5s cubic-bezier(.2,.6,.25,1); }
+.section-heading h2, .timeline-title h2, .mission-statement, .heroes-intro h2, .benefit h3 {
+  transition: opacity .85s ease, transform .85s cubic-bezier(.2,.7,.2,1), filter .85s ease, text-shadow .5s ease;
+}
+.character-text h3 { transition: text-shadow .5s ease; }
+.final-cta.reveal .final-inner h2 {
+  transition: opacity .48s ease-out .23s, transform .58s cubic-bezier(.2,.7,.2,1) .23s, text-shadow .5s ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .hero h1:hover { transform: scale(1.01); }
+  .hero h1:hover .hero-title-line {
+    text-shadow: 0 8px 35px oklch(0.08 0.01 155 / 60%),
+      0 0 calc(var(--magnet-glow, 0) * 36px) oklch(0.86 0.26 137 / calc(var(--magnet-glow, 0) * 30%)),
+      0 0 20px oklch(0.72 0.19 145 / 42%),
+      0 0 62px oklch(0.5 0.15 148 / 22%);
+  }
+  .section-heading h2:hover, .timeline-title h2:hover, .mission-statement:hover,
+  .heroes-intro h2:hover, .benefit h3:hover {
+    text-shadow: 0 0 18px oklch(0.72 0.19 145 / 42%), 0 0 58px oklch(0.5 0.15 148 / 22%);
+    transform: scale(1.01);
+  }
+  .final-inner h2:hover {
+    text-shadow: 0 6px 30px var(--background), 0 0 20px oklch(0.72 0.19 145 / 42%), 0 0 58px oklch(0.5 0.15 148 / 22%);
+    transform: translateY(0) scale(1.01);
+  }
+  .character-panel.scene-ready .character-text h3:hover {
+    text-shadow: 0 0 22px oklch(0.72 0.19 145 / 40%), 0 0 66px oklch(0.5 0.15 148 / 22%);
+    transform: translate3d(0, var(--title-y, 0px), 0) scale(1.01);
+    clip-path: inset(-70px -30px -70px -30px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero h1:hover, .section-heading h2:hover, .timeline-title h2:hover, .mission-statement:hover,
+  .heroes-intro h2:hover, .benefit h3:hover, .final-inner h2:hover,
+  .character-panel.scene-ready .character-text h3:hover { transform: none; }
+}
