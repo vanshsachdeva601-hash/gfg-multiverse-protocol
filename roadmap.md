@@ -11,3 +11,4 @@
 - [x] Add and verify fine-pointer emerald cursor with subtle atmospheric response
 - [x] Add and verify selective dark-emerald glass on the header, existing information/cards, and registration area
 - [x] Refine only Doom, Hulk, and Loki arrival weights and atmospheric handoffs; verify desktop, mobile, and reduced-motion scenes
+- [x] Smooth the final call entrance with a single reveal, subtle glow, and staggered existing content
